@@ -1,9 +1,6 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useMemo } from "react"
+import React, { useMemo } from "react"
 import { TMDB, type TMDBOptions } from "@lorenzopant/tmdb"
-
-type TmdbContextType = { tmdb: TMDB }
-const TmdbContext = createContext<TmdbContextType | undefined>(undefined)
+import { TmdbContext } from "@/hooks/use-tmdb"
 
 interface TMDBProviderProps {
     apiKey: string
@@ -16,10 +13,3 @@ export function TMDBProvider({ apiKey, options, children }: TMDBProviderProps) {
     return <TmdbContext.Provider value={{ tmdb }}>{children}</TmdbContext.Provider>
 }
 
-export function useTmdb() {
-    const context = useContext(TmdbContext)
-    if (!context) {
-        throw new Error("useTmdb must be used within a TmdbProvider")
-    }
-    return context.tmdb
-}

@@ -1,23 +1,31 @@
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { type ReactNode, useEffect } from "react"
-import Lenis from "lenis"
+import { type ReactNode, useMemo } from "react"
 import { OmssProvider } from "@/app/providers/omss-provider"
 import { TMDBProvider } from "@/app/providers/tmdb-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/app/providers/theme-provider"
+import { useAppSettings } from "@/hooks/use-appsettings"
+import "@/app/i18n/i18n"
+import { HistoryProvider } from "@/app/providers/history-provider.tsx"
 
 export default function AppProviders({ children }: { children: ReactNode }) {
-    useEffect(() => {
-        const lenis = new Lenis({ autoRaf: true })
-        return () => lenis.destroy()
-    }, [])
+    const { omssUrl, tmdbApiKey, tmdbOptions } = useAppSettings();
+
+    const omssOptions = useMemo(
+        () => ({
+            baseUrl: omssUrl,
+        }),
+        [omssUrl]
+    )
 
     return (
         <ThemeProvider defaultTheme="dark">
             <TooltipProvider>
-                <TMDBProvider apiKey={import.meta.env.VITE_TMDB_API_KEY}>
-                    <OmssProvider>
-                        <SidebarProvider>{children}</SidebarProvider>
+                <TMDBProvider apiKey={tmdbApiKey} options={tmdbOptions}>
+                    <OmssProvider options={omssOptions}>
+                        <HistoryProvider>
+                            <SidebarProvider>{children}</SidebarProvider>
+                        </HistoryProvider>
                     </OmssProvider>
                 </TMDBProvider>
             </TooltipProvider>

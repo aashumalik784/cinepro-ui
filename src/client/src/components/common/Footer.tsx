@@ -1,0 +1,110 @@
+import { Link } from "react-router-dom"
+import { Separator } from "@/components/ui/separator"
+import { toast } from "sonner"
+import { Bug, Film, Github, Info, Tv } from "lucide-react"
+import { t } from "i18next"
+
+export default function Footer() {
+    return (
+        <footer id="footer" className="mt-8 rounded-b-2xl border-t border-border py-4 transition-all duration-300 ease-in-out md:py-12">
+            <div className="px-4 md:px-6">
+                <div className="mb-6 grid grid-cols-2 gap-6 md:mb-8 md:grid-cols-3 md:gap-8">
+                    {/* Brand */}
+                    <div className="col-span-2 md:col-span-1">
+                        <div className="mb-3 flex items-center gap-2 md:mb-4">
+                            <img src="/favicon.svg" alt="Logo" width={40} height={40} />
+                            <span className="text-lg font-bold text-primary md:text-xl">{t("projectName")}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground md:text-sm">{t("footer.tagline")}</p>
+                    </div>
+
+                    {/* Pages */}
+                    <div>
+                        <h3 className="mb-2 flex items-center gap-1 text-sm font-semibold md:mb-4 md:text-base">Pages</h3>
+                        <ul className="space-y-1 md:space-y-2">
+                            <li>
+                                <Link to="/movies" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm" target="_self" rel="noopener">
+                                    <Film className="h-4 w-4" /> {t("common.movie.plural")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/shows" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm" target="_self" rel="noopener">
+                                    <Tv className="h-4 w-4" /> {t("common.tvShow.plural")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/disclaimer" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm" target="_self" rel="noopener">
+                                    <Info className="h-4 w-4" /> {t("common.disclaimer.label")}
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Links */}
+                    <div>
+                        <h3 className="mb-2 flex items-center gap-1 text-sm font-semibold md:mb-4 md:text-base">Links</h3>
+                        <ul className="space-y-1 md:space-y-2">
+                            <li>
+                                <Link
+                                    to={t("common.opensource.git-url")}
+                                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    <Github className="h-4 w-4" /> {t("footer.links.git")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to={t("common.opensource.git-url") + "/blob/main/README.md"}
+                                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    <Info className="h-4 w-4" /> {t("footer.links.about")}
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to={t("common.opensource.git-url") + "/issues"}
+                                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    <Bug className="h-4 w-4" />
+                                    {t("footer.links.report-issue")}
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <Separator className="mb-6 md:mb-8" />
+
+                <div className="flex flex-col items-center justify-between md:flex-row">
+                    <p className="text-center text-xs text-muted-foreground md:text-left md:text-sm">
+                        © {new Date().getFullYear()} {t("projectName")} by{" "}
+                        <Link to={t("common.opensource.git-url")} className="underline" target="_blank" rel="noopener">
+                            {t("authors")}
+                        </Link>
+                        . All rights reserved.
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap justify-center gap-4 md:mt-0">
+                        <Link
+                            to="#footer"
+                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground md:text-sm"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                toast.success(t("footer.cookie-policy.value"))
+                            }}
+                        >
+                            <Info className="h-4 w-4" />
+                            {t("footer.cookie-policy.label")}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    )
+}
