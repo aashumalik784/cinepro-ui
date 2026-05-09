@@ -1,39 +1,82 @@
 import { useTranslation } from "react-i18next"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import { useAppSettings } from "@/hooks/use-appsettings.ts"
 import { supportedLocales, type SupportedLocales } from "@/hooks/use-appsettings"
-import type { CountryISO3166_1 } from "@lorenzopant/tmdb"
-import { maskKey } from "@/lib/strings.utils.ts"
+import { supportedRegions, useTmdb } from "@/hooks/use-tmdb.ts"
 import { useOmss } from "@/hooks/use-omss.ts"
+import { useHistory } from "@/hooks/use-history.ts"
+
+import type { CountryISO3166_1 } from "@lorenzopant/tmdb"
+
+import { maskKey } from "@/lib/strings.utils.ts"
+
 import { Badge } from "@/components/ui/badge.tsx"
 import { Item, ItemContent, ItemHeader } from "@/components/ui/item.tsx"
 import { H1, H4, P } from "@/components/ui/typography.tsx"
-import { AlertTriangle, RefreshCcw, Star } from "lucide-react"
-import { useHistory } from "@/hooks/use-history.ts"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { Trash2 } from "lucide-react"
+
 import ConfirmDialog from "@/components/layout/ConfirmDialog.tsx"
-import { supportedRegions, useTmdb } from "@/hooks/use-tmdb.ts"
-import { Link } from "react-router-dom"
+
+import { AlertTriangle, RefreshCcw, Star, Trash2 } from "lucide-react"
+import { useEffect } from "react"
 
 export default function Settings() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const validTabs = ["general", "history", "playback", "omss", "tmdb"] as const
+
+    type Tab = (typeof validTabs)[number]
+
+    const tabFromUrl = searchParams.get("tab")
+
+    const currentTab: Tab = validTabs.includes(tabFromUrl as Tab) ? (tabFromUrl as Tab) : "general"
+
+    useEffect(() => {
+        // if no tab is specified in the URL, redirect to the first tab
+        if (!tabFromUrl) {
+            navigate({ pathname: location.pathname, search: `?tab=${validTabs[0]}` }, { replace: true })
+        }
+    }, [])
+
     const { region, locale, autoplayNext, tmdbApiKey, setLocale, setAutoplayNext, setRegion, standalone } = useAppSettings()
+
     const { valid, baseUrl, setBaseUrl } = useOmss()
     const { clear, history, remove } = useHistory()
-    const {cache} = useTmdb()
+    const { cache } = useTmdb()
 
     return (
-        <section className="mx-auto mt-22 max-w-3xl space-y-6">
+        <section className="mx-auto mt-25 max-w-3xl min-h-[60vh] space-y-6">
             <H1>{t("settingsPage.title")}</H1>
 
-            <Tabs defaultValue="general" className="w-full">
+            <Tabs
+                value={currentTab}
+                onValueChange={(value) => {
+                    const params = new URLSearchParams(searchParams)
+
+                    if (value === "general") {
+                        params.delete("tab")
+                    } else {
+                        params.set("tab", value)
+                    }
+
+                    setSearchParams(params, {
+                        replace: true,
+                    })
+                }}
+                className="w-full px-3"
+            >
                 {/* Tabs header */}
                 <TabsList variant="line">
                     <TabsTrigger value="general">{t("settingsPage.general.title")}</TabsTrigger>
@@ -71,7 +114,7 @@ export default function Settings() {
                                 </div>
 
                                 <Select value={locale} onValueChange={(value) => setLocale(value as SupportedLocales)}>
-                                    <SelectTrigger className="w-80">
+                                    <SelectTrigger className="max-w-min">
                                         <SelectValue placeholder={t("settingsPage.general.language.placeholder")} />
                                     </SelectTrigger>
 
@@ -103,9 +146,9 @@ export default function Settings() {
                                     }}
                                     classname="w-40"
                                     trigger={
-                                        <Button variant="destructive">
+                                        <Button variant="destructive" className={"max-w-min"}>
                                             <RefreshCcw />
-                                            {t("settingsPage.general.reset.button")}
+                                            <span className={"ml-1 hidden sm:inline"}>{t("settingsPage.general.reset.button")}</span>
                                         </Button>
                                     }
                                 />
@@ -127,9 +170,9 @@ export default function Settings() {
                                     description={t("settingsPage.history.clear.description")}
                                     onConfirm={clear}
                                     trigger={
-                                        <Button variant="destructive" size="sm" disabled={!history.length}>
+                                        <Button variant="destructive" className={"max-w-min"} disabled={!history.length}>
                                             <Trash2 />
-                                            {t("settingsPage.history.clear.button")}
+                                            <span className={"ml-1 hidden sm:inline"}>{t("settingsPage.history.clear.button")}</span>
                                         </Button>
                                     }
                                 />
@@ -251,11 +294,11 @@ export default function Settings() {
                                 <Input disabled id="tmdb" value={maskKey(tmdbApiKey, 10)} />
                             </div>
 
-                            <div className="mt-3 flex justify-between">
+                            <div className="mt-3 flex flex-col justify-between md:flex-row">
                                 <div>
                                     <Label>{t("settingsPage.tmdb.region.cardlabel")}</Label>
 
-                                    <span className="flex pt-1 pr-4 text-muted-foreground">
+                                    <span className="flex py-2 pr-0 text-muted-foreground md:pr-4">
                                         {t("settingsPage.tmdb.region.info", {
                                             projectName: t("projectName"),
                                         })}
@@ -270,7 +313,7 @@ export default function Settings() {
                                         location.reload()
                                     }}
                                 >
-                                    <SelectTrigger className="w-3/5">
+                                    <SelectTrigger className="w-full md:w-3/5">
                                         <SelectValue placeholder={t("settingsPage.tmdb.region.placeholder")} />
                                     </SelectTrigger>
 

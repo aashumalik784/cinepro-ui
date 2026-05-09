@@ -10,6 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
+    SidebarTrigger,
     useSidebar,
 } from "@/components/ui/sidebar"
 
@@ -18,9 +19,10 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { useHistory } from "@/hooks/use-history"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button.tsx"
 
 export default function SideBar() {
-    const { open, setOpen } = useSidebar()
+    const { setOpen } = useSidebar()
     const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
@@ -29,7 +31,7 @@ export default function SideBar() {
     const isActive = (path: string) => location.pathname === path
 
     const navItemClass = (active: boolean) =>
-        `group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all
+        `group relative flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium align-text-left justify-start transition-all
         ${active ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted/60 text-muted-foreground hover:text-foreground"}`
 
     const clickHandler = (path: string) => {
@@ -38,13 +40,15 @@ export default function SideBar() {
     }
 
     return (
-        <Sidebar side="left" variant="floating" collapsible="offcanvas" className={open ? "z-30" : "z-20"}>
+        <Sidebar side="left" variant="floating" collapsible="offcanvas" className={"z-30"}>
             {/* Header */}
             <SidebarHeader>
                 <div onClick={() => clickHandler("/")} className="flex cursor-pointer items-center gap-3 px-2 py-2">
                     <img src="/favicon.svg" alt="Logo" className="h-10" />
 
-                    <h1 className={`text-xl font-bold text-primary transition-all duration-300 ${open ? "opacity-100" : "w-0 overflow-hidden opacity-0"}`}>{t("projectName")}</h1>
+                    <h1 className="text-xl font-bold text-primary">{t("projectName")}</h1>
+
+                    <SidebarTrigger />
                 </div>
             </SidebarHeader>
 
@@ -56,24 +60,24 @@ export default function SideBar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <div onClick={() => clickHandler("/")} className={navItemClass(isActive("/"))}>
+                                <Button variant={"link"} onClick={() => clickHandler("/")} className={navItemClass(isActive("/"))}>
                                     <LucideHome size={18} />
-                                    {open && <span>{t("common.home")}</span>}
-                                </div>
+                                    <span>{t("common.home")}</span>
+                                </Button>
                             </SidebarMenuItem>
 
                             <SidebarMenuItem>
-                                <div onClick={() => clickHandler("/movies")} className={navItemClass(isActive("/movies"))}>
+                                <Button variant={"link"} onClick={() => clickHandler("/movies")} className={navItemClass(isActive("/movies"))}>
                                     <LucideFilm size={18} />
-                                    {open && <span>{t("common.movie.plural")}</span>}
-                                </div>
+                                    <span>{t("common.movie.plural")}</span>
+                                </Button>
                             </SidebarMenuItem>
 
                             <SidebarMenuItem>
-                                <div onClick={() => clickHandler("/shows")} className={navItemClass(isActive("/shows"))}>
+                                <Button variant={"link"} onClick={() => clickHandler("/shows")} className={navItemClass(isActive("/shows"))}>
                                     <LucideTv size={18} />
-                                    {open && <span>{t("common.tvShow.plural")}</span>}
-                                </div>
+                                    <span>{t("common.tvShow.plural")}</span>
+                                </Button>
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroupContent>
@@ -84,7 +88,7 @@ export default function SideBar() {
                     <SidebarGroupLabel>{t("watchhistory.title")}</SidebarGroupLabel>
 
                     <SidebarGroupContent>
-                        {!open ? null : history.length === 0 ? (
+                        {history.length === 0 ? (
                             <p className="px-2 text-sm text-muted-foreground">{t("watchhistory.empty")}</p>
                         ) : (
                             <div className="max-h-75 overflow-y-auto pr-1">
@@ -101,6 +105,7 @@ export default function SideBar() {
                                                     className="flex justify-between hover:bg-muted/50"
                                                 >
                                                     <span className="truncate">{label}</span>
+
                                                     <Badge variant="secondary">{t(`common.${entry.kind}.singular`)}</Badge>
                                                 </SidebarMenuButton>
                                             </SidebarMenuItem>
@@ -117,10 +122,10 @@ export default function SideBar() {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <div onClick={() => clickHandler("/settings")} className={navItemClass(isActive("/settings"))}>
+                        <Button variant={"link"} onClick={() => clickHandler("/settings")} className={navItemClass(isActive("/settings"))}>
                             <LucideCog size={18} />
-                            {open && <span>{t("common.settings")}</span>}
-                        </div>
+                            <span>{t("common.settings")}</span>
+                        </Button>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>

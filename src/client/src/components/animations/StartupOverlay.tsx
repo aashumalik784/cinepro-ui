@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { t } from "i18next"
 import { H2, H3, H4 } from "@/components/ui/typography.tsx"
+import "@/styles/animation.css"
 
 type StartupPhase = "loading" | "brand" | "closing" | "done"
 const startupOverlayKey = "app.startup-overlay-done"
 
-export function StartupOverlay() {
+export default function StartupOverlay() {
     const [phase, setPhase] = useState<StartupPhase>(() => {
         return window.sessionStorage.getItem(startupOverlayKey) === "true" ? "done" : "loading"
     })
@@ -59,15 +60,20 @@ export function StartupOverlay() {
                 phase === "closing" ? "scale-105 opacity-0" : "scale-100 opacity-100"
             }`}
         >
-            {/* subtle radial glow */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_45%)]" />
 
             {phase === "loading" ? (
                 <div className="relative z-10 flex w-[min(88vw,420px)] flex-col items-center gap-5">
+                    <div className="inline-flex size-48 items-center justify-center transition-all duration-500 sm:size-28">
+                        <div className="flex size-full items-center justify-center">
+                            <img src="/favicon.svg" alt={t("projectName") + " Logo"} className="object-contain" />
+                        </div>
+                    </div>
+
                     <H2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{t("projectName")}</H2>
 
                     <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <div className="h-full w-full origin-left rounded-full bg-linear-to-r from-primary via-accent to-primary motion-safe:animate-[startup-loading-bar_1800ms_linear_forwards]" />
+                        <div className={`h-full rounded-full bg-linear-to-r from-primary via-accent to-primary animate-startup-loading-bar`} />
                     </div>
 
                     <H4 className="text-xs tracking-[0.3em] text-muted-foreground uppercase italic">{t("common.loading")}</H4>
@@ -80,7 +86,7 @@ export function StartupOverlay() {
                         </div>
                     </div>
 
-                    <div className={`text-center`}>
+                    <div className="text-center">
                         <H2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{t("common.welcome", { projectName: t("projectName") })}</H2>
                         <H3 className="mt-2 text-sm tracking-[0.24em] text-muted-foreground uppercase">{t("common.slogan")}</H3>
                     </div>
@@ -89,5 +95,3 @@ export function StartupOverlay() {
         </div>
     )
 }
-
-export default StartupOverlay

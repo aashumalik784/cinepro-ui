@@ -6,46 +6,66 @@ import { SidebarTrigger } from "@/components/ui/sidebar.tsx"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { useAppSettings } from "@/hooks/use-appsettings.ts"
+import { useIsMobile } from "@/hooks/use-mobile.ts"
 
 export default function Header() {
     const { t } = useTranslation()
     const { setShowSearch, showSearch } = useAppSettings()
+    const isMobile = useIsMobile()
 
     return (
         <>
             <header className="fixed top-0 z-10 w-full">
-                <div className="mx-auto mt-3 flex h-16 w-[min(92vw,1240px)] items-center justify-between rounded-2xl border px-4 backdrop-blur-xl sm:px-5 lg:px-6">
-                    <div className={"flex items-center gap-4"}>
-                        <SidebarTrigger />
+                <div className="mx-auto mt-3 flex h-16 w-[min(92vw,1240px)] items-center rounded-2xl border px-4 backdrop-blur-xl sm:px-5 lg:px-6">
+                    {/* LEFT */}
+                    <div className="flex flex-1 items-center gap-2">
                         <Link to="/" className="group inline-flex items-center gap-2">
                             <span className="inline-flex size-10 items-center justify-center overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-105">
                                 <img src="/favicon.svg" alt="CinePro logo" className="size-full object-cover" />
                             </span>
+
                             <span className="text-2xl font-semibold tracking-tight text-primary-foreground">{t("projectName")}</span>
                         </Link>
+                        {!isMobile && <SidebarTrigger />}
                     </div>
 
-                    <div className="hidden w-56 sm:block md:w-72 lg:w-96">
-                        <Button variant="outline" onClick={() => setShowSearch(!showSearch)} className="h-9 w-full justify-between px-3 text-sm">
-                            <span className="inline-flex items-center gap-2 text-muted-foreground">
-                                <LucideSearch className="size-4" />
-                                <span className="hidden sm:inline">{t("header.searchPlaceholder")}</span>
-                            </span>
+                    {/* CENTER SEARCH */}
+                    {!isMobile && (
+                        <div className="hidden w-56 flex-1 sm:block md:w-72 lg:w-96">
+                            <Button variant="outline" onClick={() => setShowSearch(!showSearch)} className="h-9 w-full justify-between px-3 text-sm">
+                                <span className="inline-flex items-center gap-2 text-muted-foreground">
+                                    <LucideSearch className="size-4" />
+                                    <span className="hidden sm:inline">{t("header.searchPlaceholder")}</span>
+                                </span>
 
-                            <span className="hidden items-center gap-1 md:flex">
-                                <Kbd>⌘</Kbd>+<Kbd>F</Kbd>
-                            </span>
-                        </Button>
-                    </div>
+                                <span className="hidden items-center gap-1 md:flex">
+                                    <Kbd>⌘</Kbd>+<Kbd>F</Kbd>
+                                </span>
+                            </Button>
+                        </div>
+                    )}
 
                     {/* RIGHT */}
-                    <div className="flex items-center gap-2">
-                        <Button asChild variant="outline" size="sm">
-                            <Link to="/settings" className="inline-flex items-center gap-1.5">
-                                <Settings2 className="size-4" />
-                                {t("settingsPage.title")}
-                            </Link>
-                        </Button>
+                    <div className="flex flex-1 items-center justify-end gap-2">
+                        {isMobile && (
+                            <>
+                                <Button variant="ghost" size="icon" onClick={() => setShowSearch(!showSearch)}>
+                                    <LucideSearch className="size-5" />
+                                </Button>
+                                <SidebarTrigger />
+                            </>
+                        )}
+
+                        {!isMobile && (
+                            <>
+                                <Button asChild variant="outline">
+                                    <Link to="/settings" className="inline-flex items-center gap-1.5">
+                                        <Settings2 className="size-4" />
+                                        {t("settingsPage.title")}
+                                    </Link>
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>

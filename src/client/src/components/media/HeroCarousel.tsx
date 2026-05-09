@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { type TMDB } from "@lorenzopant/tmdb"
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react"
-
+import "@/styles/animation.css"
 import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -117,6 +117,7 @@ export function HeroCarousel({ tmdb }: { tmdb: TMDB }) {
             heroApi.off("select", onSelect)
             heroApi.off("reInit", onSelect)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [heroApi])
 
     useEffect(() => {
@@ -129,7 +130,7 @@ export function HeroCarousel({ tmdb }: { tmdb: TMDB }) {
 
     const heroEmptyState = useMemo(
         () => (
-            <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center text-foreground">
+            <div className="flex min-h-80 flex-col items-center justify-center gap-4 px-6 text-center text-foreground">
                 <Sparkles className="size-8 text-primary" />
                 <h1 className="text-2xl font-semibold">Loading TMDB movies...</h1>
                 <p className="max-w-xl text-sm text-muted-foreground">The page is wired to the TMDB movie library and will populate as soon as the client can read your API key.</p>
