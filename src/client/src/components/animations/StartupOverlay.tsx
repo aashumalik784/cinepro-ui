@@ -56,7 +56,7 @@ export default function StartupOverlay() {
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-background transition-all duration-500 ease-out ${
+            className={`fixed inset-0 z-500 flex items-center justify-center bg-background transition-all duration-500 ease-out ${
                 phase === "closing" ? "scale-105 opacity-0" : "scale-100 opacity-100"
             }`}
         >

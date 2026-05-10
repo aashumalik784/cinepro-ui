@@ -16,7 +16,7 @@ export async function registerHelmetPlugin(app: FastifyInstance) {
 
                 styleSrc: ["'self'", "'unsafe-inline'"],
 
-                mediaSrc: ["'self'", "https:"],
+                mediaSrc: ["'self'", "https:", "http:", "blob:"],
                 fontSrc: ["'self'", "https:", "data:"],
 
                 objectSrc: ["'none'"],

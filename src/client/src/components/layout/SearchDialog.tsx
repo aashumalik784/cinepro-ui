@@ -105,7 +105,7 @@ export function SearchDialog() {
                 })
 
                 if (!cancelled) {
-                    setResults(res.results ?? [])
+                    setResults(res.results.filter(item => item.media_type !== "person") ?? [])
                 }
             } catch (err) {
                 console.error(err)

@@ -16,7 +16,7 @@ export default function Header() {
     return (
         <>
             <header className="fixed top-0 left-0 z-19 w-full py-3">
-                <div className="mx-auto flex h-16 w-[min(92vw,1240px)] items-center rounded-2xl border bg-background/80 px-4 backdrop-blur-xl sm:px-5 lg:px-6">
+                <div className="mx-auto flex h-16 w-[min(92vw,1240px)] items-center rounded-2xl border bg-background/20 px-4 backdrop-blur-xl sm:px-5 lg:px-6">
                     {/* LEFT */}
                     <div className="flex flex-1 items-center gap-2">
                         <Link to="/" className="group inline-flex items-center gap-2">

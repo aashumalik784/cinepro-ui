@@ -8,15 +8,9 @@ import { HistoryProvider } from "@/app/providers/history-provider"
 import { MediaDrawerProvider } from "@/components/media/drawer/providers/MediaDrawerProvider"
 import "@/app/i18n/i18n"
 import "lenis/dist/lenis.css"
-import Lenis from "lenis"
 import { BrowserRouter } from "react-router-dom"
 
 export default function AppProviders({ children }: { children: ReactNode }) {
-    new Lenis({
-        autoRaf: true,
-        prevent: (node) => node.classList.contains("lenis-disabled"),
-    })
-
     return (
         <ThemeProvider defaultTheme="dark" storageKey="app-theme">
             <TooltipProvider delayDuration={150}>

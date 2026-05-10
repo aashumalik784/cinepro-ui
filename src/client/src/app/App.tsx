@@ -1,73 +1,61 @@
-import { lazy, Suspense } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { Toaster } from "@/components/ui/sonner"
 import { Route, Routes } from "react-router-dom"
-import { useSidebar } from "@/components/ui/sidebar.tsx"
-import SideBar from "@/components/sidebar/SideBar"
-import Footer from "@/components/layout/Footer"
-import Header from "@/components/layout/Header"
-import StartupOverlay from "@/components/animations/StartupOverlay.tsx"
-import { MediaDrawerRoot } from "@/components/media/drawer/MediaDrawerRoot"
-import { useMediaDrawer } from "@/components/media/drawer/hooks/useMediaDrawer.ts"
+import { useIsMobile } from "@/hooks/use-mobile.ts"
+import Lenis from "lenis"
 
 const HomePage = lazy(() => import("@/pages/home/Home"))
 const MoviesPage = lazy(() => import("@/pages/movies/Movies"))
+const WatchMoviePage = lazy(() => import("@/pages/watch/movie/WatchMoviePage.tsx"))
+const WatchTvPage = lazy(() => import("@/pages/watch/tv/WatchTvPage.tsx"))
 const ShowsPage = lazy(() => import("@/pages/shows/Shows"))
 const NotFound = lazy(() => import("@/pages/404/NotFound"))
 const Settings = lazy(() => import("@/pages/settings/Settings"))
 const Disclaimer = lazy(() => import("@/pages/disclaimer/Disclaimer"))
 
+import AppLayout from "@/app/AppLayout.tsx"
+import BlankLayout from "@/app/BlankLayout"
+
 export default function App() {
-    const { open, setOpen } = useSidebar()
-    const { isVisible } = useMediaDrawer()
+    const isMobile = useIsMobile()
+
+    useEffect(() => {
+        if (!isMobile) {
+            const lenis = new Lenis({
+                autoRaf: true,
+                prevent: (node) => node.classList.contains("lenis-disabled"),
+            })
+
+            return () => lenis.destroy()
+        }
+    }, [isMobile])
 
     return (
         <>
-            <div className="relative min-h-screen w-full bg-background text-foreground">
-                <MediaDrawerRoot />
-                {/* Sidebar */}
-                <SideBar />
-                {/* Sidebar overlay */}
-                <div
-                    onClick={() => setOpen(false)}
-                    className={`fixed inset-0 z-20 transition-all duration-300 ease-out ${open ? "opacity-100 backdrop-blur-sm" : "backdrop-blur-0 pointer-events-none opacity-0"}`}
-                />
-                <Header />
-
-                <div
-                    id="app-root"
-                    className={`relative flex min-h-screen origin-center flex-col transition-all duration-500 ease-out ${isVisible ? "translate-x-3 scale-[0.99] opacity-90" : "translate-x-0 scale-100 opacity-100"}`}
-                >
-                    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-                        <div className="absolute top-0 left-0 h-full w-full animate-pulse animation-duration-[10s]">
-                            <div className="absolute -top-48 -left-48 h-[40vw] max-h-150 min-h-75 w-[40vw] max-w-150 min-w-75 rounded-full bg-primary/60 blur-[128px]" />
-                            <div className="absolute -top-32 -left-32 h-[30vw] max-h-100 min-h-50 w-[30vw] max-w-100 min-w-50 rounded-full bg-primary/20 blur-[96px]" />
-                            <div className="absolute -top-16 -left-16 h-[20vw] max-h-50 min-h-25 w-[20vw] max-w-50 min-w-25 rounded-full bg-primary/10 blur-3xl" />
-                        </div>
+            <Suspense
+                fallback={
+                    <div className="flex min-h-screen min-w-screen items-center justify-center">
+                        <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                     </div>
-                    {/* MAIN CONTENT */}
-                    <main className="mx-auto w-full flex-1 space-y-6">
-                        <Suspense
-                            fallback={
-                                <div className="flex min-h-[50vh] items-center justify-center">
-                                    <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                                </div>
-                            }
-                        >
-                            <Routes>
-                                <Route path="/" element={<HomePage />} />
-                                <Route path="/movies" element={<MoviesPage />} />
-                                <Route path="/shows" element={<ShowsPage />} />
-                                <Route path="/settings" element={<Settings />} />
-                                <Route path="/disclaimer" element={<Disclaimer />} />
-                                <Route path="*" element={<NotFound />} />
-                            </Routes>
-                        </Suspense>
-                    </main>
-                    <Footer />
-                </div>
+                }
+            >
+                <Routes>
+                    {/* MAIN APP */}
+                    <Route element={<AppLayout />}>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/movies" element={<MoviesPage />} />
+                        <Route path="/shows" element={<ShowsPage />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/disclaimer" element={<Disclaimer />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Route>
 
-                <StartupOverlay />
-            </div>
+                    <Route element={<BlankLayout />}>
+                        <Route path="/watch/movie/:id" element={<WatchMoviePage />} />
+                        <Route path="/watch/tv/:id" element={<WatchTvPage />} />
+                    </Route>
+                </Routes>
+            </Suspense>
 
             <Toaster />
         </>

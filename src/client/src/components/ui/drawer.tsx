@@ -2,6 +2,8 @@ import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
+import { LucideX } from "lucide-react"
+import { Button } from "@/components/ui/button.tsx"
 
 function Drawer({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
     return <DrawerPrimitive.Root data-slot="drawer" {...props} />
@@ -44,7 +46,15 @@ function DrawerContent({ className, children, ...props }: React.ComponentProps<t
                 )}
                 {...props}
             >
-                <div className="absolute top-4 left-1/2 z-20 flex h-1.5 w-25 shrink-0 -translate-x-1/2 items-center justify-center rounded-full bg-muted/60 backdrop-blur-2xl group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+                <div className="absolute top-3 right-3 z-50">
+                    <DrawerClose asChild>
+                        <Button variant="outline" size="icon">
+                            <span className="sr-only">Close</span>
+                            <LucideX className="h-4 w-4" />
+                        </Button>
+                    </DrawerClose>
+                </div>
+
                 {children}
             </DrawerPrimitive.Content>
         </DrawerPortal>

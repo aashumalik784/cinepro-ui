@@ -10,6 +10,8 @@ import { TrailerDialog } from "./TrailerDialog"
 import type { MediaDrawerPayload } from "./types/drawer.types"
 import { formatRuntime } from "@/components/media/drawer/mappers/media.mapper.ts"
 import { cn } from "@/lib/utils.ts"
+import { useNavigate } from "react-router-dom"
+import { useMediaDrawer } from "@/components/media/drawer/hooks/useMediaDrawer.ts"
 
 interface MediaDrawerProps {
     payload: MediaDrawerPayload
@@ -21,10 +23,25 @@ interface MediaDrawerProps {
 
 export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawerProps) {
     const { data, isLoading } = useMediaDetails(payload.type, payload.id)
+    const { closeAll } = useMediaDrawer()
+
+    const navigate = useNavigate()
+
+    const handlePlay = () => {
+        if (!data) return
+
+        const path = payload.type === "movie" ? `/watch/movie/${data.id}` : `/watch/tv/${data.id}`
+
+        closeAll()
+
+        requestAnimationFrame(() => {
+            navigate(path)
+        })
+    }
 
     return (
         <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DrawerContent className={cn("lenis-stopped lenis-disabled mx-auto mt-0 h-[98vh] max-w-6xl overflow-hidden pt-0", className)} data-lenis-prevent="true">
+            <DrawerContent className={cn("lenis-stopped lenis-disabled mx-auto mt-0 h-[98vh] max-w-6xl overflow-hidden bg-black pt-0 outline-none", className)} data-lenis-prevent="true">
                 <DrawerHeader className={"sr-only"}>
                     <DrawerTitle>Media Drawer</DrawerTitle>
                     <DrawerDescription>Content below</DrawerDescription>
@@ -37,7 +54,7 @@ export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawer
                 ) : (
                     <div className="relative h-full overflow-y-auto">
                         {/* HERO */}
-                        <div className="relative aspect-[16/9] w-full overflow-hidden md:aspect-video">
+                        <div className="relative aspect-video w-full overflow-hidden md:aspect-video">
                             {data.backdropUrl ? (
                                 <img src={data.backdropUrl} alt={`${data.title} backdrop`} draggable={false} className="absolute inset-0 h-full w-full rounded-t-2xl object-cover object-top" />
                             ) : (
@@ -49,7 +66,7 @@ export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawer
                         </div>
 
                         {/* CONTENT */}
-                        <div className="relative z-20 -mt-16 px-4 pb-10 md:-mt-[80vh] md:px-8">
+                        <div className="relative z-20 -mt-16 px-4 pb-10 md:mt-[-55vh] md:px-8">
                             {/* LOGO / TITLE */}
                             <div className="mb-4 max-w-[70%] md:max-w-[40%]">
                                 {data.logoUrl ? (
@@ -86,7 +103,7 @@ export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawer
 
                             {/* ACTIONS */}
                             <div className="mb-5 flex items-center gap-2">
-                                <Button className="rounded-full">
+                                <Button className="rounded-full" onClick={handlePlay}>
                                     <Play className="mr-2 h-4 w-4 fill-white" />
                                     Play
                                 </Button>
@@ -124,12 +141,12 @@ export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawer
 function MediaDrawerSkeleton() {
     return (
         <div className="relative h-full overflow-hidden bg-black">
-            <div className="relative aspect-[16/9] w-full overflow-hidden md:aspect-video">
+            <div className="relative aspect-video w-full overflow-hidden md:aspect-video">
                 <div className="absolute inset-0 animate-pulse bg-muted" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent" />
             </div>
 
-            <div className="relative -mt-16 px-4 md:-mt-[18vh] md:px-8">
+            <div className="relative -mt-16 px-4 md:mt-[-18vh] md:px-8">
                 <div className="mb-5 h-12 w-[40%] animate-pulse rounded-md bg-muted" />
 
                 <div className="mb-5 flex flex-wrap gap-2">

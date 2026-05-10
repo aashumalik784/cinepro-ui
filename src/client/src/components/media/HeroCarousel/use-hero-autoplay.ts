@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import type { CarouselApi } from "@/components/ui/carousel"
 
 const AUTOPLAY_DELAY = 6500
@@ -12,10 +12,9 @@ type Params = {
 
 export function useHeroAutoplay({ heroApi, enabled, slideCount, onSelect }: Params) {
     const autoplayRef = useRef<number | null>(null)
-    const [isTabVisible, setIsTabVisible] = useState(true)
 
     const restartAutoplay = useCallback(() => {
-        if (!heroApi || !isTabVisible || !enabled) return
+        if (!heroApi || !enabled) return
 
         if (autoplayRef.current) {
             window.clearTimeout(autoplayRef.current)
@@ -30,25 +29,7 @@ export function useHeroAutoplay({ heroApi, enabled, slideCount, onSelect }: Para
                 heroApi.scrollTo(0)
             }
         }, AUTOPLAY_DELAY)
-    }, [heroApi, isTabVisible, enabled])
-
-    // visibility handling
-    useEffect(() => {
-        const handleVisibilityChange = () => {
-            const visible = !document.hidden
-            setIsTabVisible(visible)
-
-            if (!visible && autoplayRef.current) {
-                window.clearTimeout(autoplayRef.current)
-            }
-
-            if (visible) restartAutoplay()
-        }
-
-        document.addEventListener("visibilitychange", handleVisibilityChange)
-
-        return () => document.removeEventListener("visibilitychange", handleVisibilityChange)
-    }, [restartAutoplay])
+    }, [heroApi, enabled])
 
     // carousel binding
     useEffect(() => {
@@ -76,6 +57,7 @@ export function useHeroAutoplay({ heroApi, enabled, slideCount, onSelect }: Para
                 window.clearTimeout(autoplayRef.current)
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [heroApi, slideCount, restartAutoplay])
 
     // cleanup on unmount
