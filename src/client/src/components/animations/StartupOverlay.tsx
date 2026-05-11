@@ -78,7 +78,7 @@ export default function StartupOverlay() {
                         <div className={`animate-startup-loading-bar h-full rounded-full bg-linear-to-r from-primary via-accent to-primary`} />
                     </div>
 
-                    <H4 className="text-xs tracking-[0.3em] text-muted-foreground uppercase italic">{t("common.loading")}</H4>
+                    <H4 className="text-xs tracking-[0.3em] text-muted-foreground uppercase italic">{t("loading")}</H4>
                 </div>
             ) : (
                 <div className="relative z-10 flex flex-col items-center gap-4 transition-all duration-500">
@@ -89,8 +89,8 @@ export default function StartupOverlay() {
                     </div>
 
                     <div className="text-center">
-                        <H2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{t("common.welcome", { projectName: t("projectName") })}</H2>
-                        <H3 className="mt-2 text-sm tracking-[0.24em] text-muted-foreground uppercase">{t("common.slogan")}</H3>
+                        <H2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{t("welcome", { projectName: t("projectName") })}</H2>
+                        <H3 className="mt-2 text-sm tracking-[0.24em] text-muted-foreground uppercase">{t("slogan")}</H3>
                     </div>
                 </div>
             )}
