@@ -10,6 +10,7 @@ export function useEpisodeAutoplay() {
     const navigate = useNavigate()
 
     const handleEpisodeEnded = useCallback(async () => {
+        console.log(autoplayEnabled, media, media?.type, media?.seasonNumber, media?.episodeNumber)
         if (!autoplayEnabled || !media || media.type !== "tv" || media.seasonNumber === undefined || media.episodeNumber === undefined) {
             return
         }

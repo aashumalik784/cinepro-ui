@@ -11,9 +11,18 @@ function PopoverTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimiti
     return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
-function PopoverContent({ className, align = "center", sideOffset = 4, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+const PopoverContent = React.forwardRef<
+    React.ElementRef<typeof PopoverPrimitive.Content>,
+    React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
+        ref?: HTMLElement | null
+    }
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    // eslint-disable-next-line react-hooks/refs
+    const cont = ref?.current
     return (
-        <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Portal container={cont}>
             <PopoverPrimitive.Content
                 data-slot="popover-content"
                 align={align}
@@ -26,7 +35,7 @@ function PopoverContent({ className, align = "center", sideOffset = 4, ...props 
             />
         </PopoverPrimitive.Portal>
     )
-}
+})
 
 function PopoverAnchor({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
     return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />

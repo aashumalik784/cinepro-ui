@@ -1,6 +1,14 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { Check, Settings, Captions, Volume2, HardDrive } from "lucide-react"
+import {
+    Check,
+    Settings,
+    Captions,
+    Volume2,
+    HardDrive,
+    Gauge,
+    Clapperboard
+} from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -11,7 +19,30 @@ import { useAudioTracks } from "./hooks/useAudioTracks"
 import { Badge } from "@/components/ui/badge"
 import { normalizeQuality } from "@/lib/strings.utils.ts"
 
-export function PlayerSettings() {
+interface PlayerSettingsProps {
+    ref: React.RefObject<HTMLDivElement | null>
+
+    playbackRate: number
+    onPlaybackRateChange: (rate: number) => void
+
+    qualities: {
+        index: number
+        height: number
+        label: string
+    }[]
+
+    currentQuality: number
+    onQualityChange: (level: number) => void
+}
+
+export function PlayerSettings({
+                                   ref,
+                                   playbackRate,
+                                   onPlaybackRateChange,
+                                   qualities,
+                                   currentQuality,
+                                   onQualityChange
+                               }: PlayerSettingsProps) {
     const { t } = useTranslation("player")
     const { state, selectSource } = useMediaWatchContext()
     const { subtitles, selectedSubtitle, selectSubtitle } = useSubtitles()
@@ -41,20 +72,30 @@ export function PlayerSettings() {
                     <Settings className="h-5 w-5" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-80 border-zinc-800 bg-zinc-900/95 text-zinc-100 backdrop-blur-md p-0 overflow-hidden">
+            <PopoverContent ref={ref} align="end" className="backdrop-blur-md bg-black/50 w-full">
                 <Tabs defaultValue="source" className="w-full">
-                    <TabsList className="w-full justify-start rounded-none border-b border-zinc-800 bg-transparent p-0">
-                        <TabsTrigger value="source" className="rounded-none data-[state=active]:bg-zinc-800">
-                            <HardDrive className="size-4 mr-2" />
+                    <TabsList className="w-full justify-start p-0">
+                        <TabsTrigger value="source">
+                            <HardDrive className="mr-2 " />
                             {t("settings.tabs.source")}
                         </TabsTrigger>
-                        <TabsTrigger value="subtitles" className="rounded-none data-[state=active]:bg-zinc-800">
-                            <Captions className="size-4 mr-2" />
+                        <TabsTrigger value="subtitles">
+                            <Captions className="mr-2 " />
                             {t("settings.tabs.subtitles")}
                         </TabsTrigger>
-                        <TabsTrigger value="audio" className="rounded-none data-[state=active]:bg-zinc-800">
-                            <Volume2 className="size-4 mr-2" />
+                        <TabsTrigger value="audio">
+                            <Volume2 className="mr-2 " />
                             {t("settings.tabs.audio")}
+                        </TabsTrigger>
+
+                        <TabsTrigger value="quality">
+                            <Clapperboard className="mr-2 " />
+                            Quality
+                        </TabsTrigger>
+
+                        <TabsTrigger value="speed">
+                            <Gauge className="mr-2 " />
+                            Speed
                         </TabsTrigger>
                     </TabsList>
 
@@ -62,29 +103,25 @@ export function PlayerSettings() {
                         <TabsContent value="source" className="m-0 p-2">
                             {Object.entries(groupedSources).map(([provider, providerSources]) => (
                                 <div key={provider} className="mb-4 last:mb-0">
-                                    <div className="px-2 py-1 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                                        {provider}
-                                    </div>
-                                    <div className="space-y-1 mt-1">
+                                    <div className="px-2 py-1 text-xs font-semibold tracking-wider text-zinc-500 uppercase">{provider}</div>
+                                    <div className="mt-1 space-y-1">
                                         {providerSources.map((source, idx) => {
                                             const isSelected = selectedSource?.url === source.url
                                             return (
                                                 <button
                                                     key={`${source.provider.id}-${idx}`}
                                                     onClick={() => selectSource(source)}
-                                                    className={`w-full flex items-center justify-between px-2 py-2 rounded-md transition-colors ${
-                                                        isSelected ? "bg-primary/20 text-primary" : "hover:bg-zinc-800 text-zinc-300"
+                                                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                                        isSelected ? "bg-primary/20 text-primary" : "text-zinc-300 hover:bg-zinc-800"
                                                     }`}
                                                 >
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-sm font-medium">
-                                                            {t("selectors.sourceNumber", { number: idx + 1 })}
-                                                        </span>
-                                                        <Badge variant="outline" className="text-[10px] py-0 border-zinc-700">
+                                                        <span className="text-sm font-medium">{t("selectors.sourceNumber", { number: idx + 1 })}</span>
+                                                        <Badge variant="outline" className="border-zinc-700 py-0 text-[10px]">
                                                             {normalizeQuality(source.quality)}
                                                         </Badge>
                                                     </div>
-                                                    {isSelected && <Check className="size-4" />}
+                                                    {isSelected && <Check className="" />}
                                                 </button>
                                             )
                                         })}
@@ -96,23 +133,23 @@ export function PlayerSettings() {
                         <TabsContent value="subtitles" className="m-0 p-2">
                             <button
                                 onClick={() => selectSubtitle(undefined)}
-                                className={`w-full flex items-center justify-between px-2 py-2 rounded-md transition-colors ${
-                                    !selectedSubtitle ? "bg-primary/20 text-primary" : "hover:bg-zinc-800 text-zinc-300"
+                                className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                    !selectedSubtitle ? "bg-primary/20 text-primary" : "text-zinc-300 hover:bg-zinc-800"
                                 }`}
                             >
                                 <span className="text-sm font-medium">{t("selectors.subtitlesOff")}</span>
-                                {!selectedSubtitle && <Check className="size-4" />}
+                                {!selectedSubtitle && <Check className="" />}
                             </button>
                             {subtitles.map((sub, idx) => (
                                 <button
                                     key={`${sub.url}-${idx}`}
                                     onClick={() => selectSubtitle(sub)}
-                                    className={`w-full flex items-center justify-between px-2 py-2 rounded-md transition-colors ${
-                                        selectedSubtitle?.url === sub.url ? "bg-primary/20 text-primary" : "hover:bg-zinc-800 text-zinc-300"
+                                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                        selectedSubtitle?.url === sub.url ? "bg-primary/20 text-primary" : "text-zinc-300 hover:bg-zinc-800"
                                     }`}
                                 >
                                     <span className="text-sm font-medium">{sub.label}</span>
-                                    {selectedSubtitle?.url === sub.url && <Check className="size-4" />}
+                                    {selectedSubtitle?.url === sub.url && <Check className="" />}
                                 </button>
                             ))}
                         </TabsContent>
@@ -123,19 +160,60 @@ export function PlayerSettings() {
                                     <button
                                         key={`${track.language}-${idx}`}
                                         onClick={() => selectAudioTrack(track)}
-                                        className={`w-full flex items-center justify-between px-2 py-2 rounded-md transition-colors ${
-                                            selectedAudioTrack?.language === track.language ? "bg-primary/20 text-primary" : "hover:bg-zinc-800 text-zinc-300"
+                                        className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                            selectedAudioTrack?.language === track.language ? "bg-primary/20 text-primary" : "text-zinc-300 hover:bg-zinc-800"
                                         }`}
                                     >
                                         <span className="text-sm font-medium">{track.label || track.language}</span>
-                                        {selectedAudioTrack?.language === track.language && <Check className="size-4" />}
+                                        {selectedAudioTrack?.language === track.language && <Check className="" />}
                                     </button>
                                 ))
                             ) : (
-                                <div className="p-4 text-center text-zinc-500 text-sm">
-                                    {t("settings.noAudioTracks")}
-                                </div>
+                                <div className="p-4 text-center text-sm text-zinc-500">{t("settings.noAudioTracks")}</div>
                             )}
+                        </TabsContent>
+
+                        <TabsContent value="speed" className="m-0 p-2">
+                            {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((speed) => (
+                                <button
+                                    key={speed}
+                                    onClick={() => onPlaybackRateChange(speed)}
+                                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                        playbackRate === speed ? "bg-primary/20 text-primary-foreground" : ""
+                                    }`}
+                                >
+                                    <span className="text-sm font-medium">{speed}x</span>
+
+                                    {playbackRate === speed && <Check className="" />}
+                                </button>
+                            ))}
+                        </TabsContent>
+
+                        <TabsContent value="quality" className="m-0 p-2">
+                            <button
+                                onClick={() => onQualityChange(-1)}
+                                className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                    currentQuality === -1 ? "bg-primary/20 text-primary" : ""
+                                }`}
+                            >
+                                <span className="text-sm font-medium">Auto</span>
+
+                                {currentQuality === -1 && <Check className="" />}
+                            </button>
+
+                            {qualities.map((quality) => (
+                                <button
+                                    key={quality.index}
+                                    onClick={() => onQualityChange(quality.index)}
+                                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 transition-colors ${
+                                        currentQuality === quality.index ? "bg-primary/20 text-primary" : ""
+                                    }`}
+                                >
+                                    <span className="text-sm font-medium">{quality.label}</span>
+
+                                    {currentQuality === quality.index && <Check className="" />}
+                                </button>
+                            ))}
                         </TabsContent>
                     </ScrollArea>
                 </Tabs>

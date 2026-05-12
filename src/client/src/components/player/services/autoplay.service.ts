@@ -3,7 +3,6 @@ import { tmdbService } from "./tmdb.service"
 
 export const autoplayService = {
     getNextEpisode: async (tmdb: TMDB, showId: string, seasonNumber: number, episodeNumber: number) => {
-        // 1. Check if next episode exists in current season
         const currentSeason = await tmdbService.getSeasonDetails(tmdb, showId, seasonNumber)
         const nextEpisode = currentSeason.episodes.find((e) => e.episode_number === episodeNumber + 1)
 

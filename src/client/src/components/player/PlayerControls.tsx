@@ -1,5 +1,16 @@
-import { useEffect } from "react"
-import { Play, Pause, Maximize, Minimize, Volume2, VolumeX, Undo, Redo } from "lucide-react"
+import React, { useEffect, type WheelEventHandler } from "react"
+import {
+    Play,
+    Pause,
+    Maximize,
+    Minimize,
+    Volume2,
+    VolumeX,
+    Undo,
+    Redo,
+    PictureInPicture,
+    PictureInPicture2
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
@@ -23,6 +34,20 @@ interface PlayerControlsProps {
     onDoubleClick: () => void
     onWheel: WheelEventHandler<HTMLDivElement>
     show: boolean
+    ref: React.RefObject<HTMLDivElement | null>
+    isPiP: boolean
+    onTogglePiP: () => void
+    playbackRate: number
+    onPlaybackRateChange: (rate: number) => void
+
+    qualities: {
+        index: number
+        height: number
+        label: string
+    }[]
+
+    currentQuality: number
+    onQualityChange: (level: number) => void
 }
 
 export function PlayerControls({
@@ -41,6 +66,14 @@ export function PlayerControls({
     onDoubleClick,
     onDivClick,
     onWheel,
+    ref,
+    isPiP,
+    onTogglePiP,
+    playbackRate,
+    onPlaybackRateChange,
+    qualities,
+    currentQuality,
+    onQualityChange,
 }: PlayerControlsProps) {
     const { t } = useTranslation("player")
     useEffect(() => {
@@ -97,7 +130,7 @@ export function PlayerControls({
             onDoubleClick={onDoubleClick}
             onWheel={onWheel}
         >
-            <div className="mx-auto w-full max-w-6xl space-y-2" onClick={(e) => e.stopPropagation()} onWheel={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+            <div className="mx-auto w-full space-y-2" onClick={(e) => e.stopPropagation()} onWheel={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
                 {/* Progress Bar */}
                 <div className="group relative py-2">
                     <Slider value={[currentTime]} max={duration} step={1} onValueChange={onSeek} className="cursor-pointer" />
@@ -118,7 +151,13 @@ export function PlayerControls({
                         </Button>
 
                         <div className="ml-4 flex items-center gap-2">
-                            <Button variant="ghost" size="icon" onClick={onToggleMute} className="text-white hover:bg-white/20" title={isMuted || volume === 0 ? t("controls.unmute") : t("controls.mute")}>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={onToggleMute}
+                                className="text-white hover:bg-white/20"
+                                title={isMuted || volume === 0 ? t("controls.unmute") : t("controls.mute")}
+                            >
                                 {isMuted || volume === 0 ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
                             </Button>
 
@@ -133,9 +172,26 @@ export function PlayerControls({
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <PlayerSettings />
+                        <PlayerSettings
+                            ref={ref}
+                            playbackRate={playbackRate}
+                            onPlaybackRateChange={onPlaybackRateChange}
+                            qualities={qualities}
+                            currentQuality={currentQuality}
+                            onQualityChange={onQualityChange}
+                        />
 
-                        <Button variant="ghost" size="icon" onClick={onToggleFullscreen} className="text-white hover:bg-white/20" title={isFullscreen ? t("controls.exitFullscreen") : t("controls.fullscreen")}>
+                        <Button variant="ghost" size="icon" onClick={onTogglePiP} className="text-white hover:bg-white/20" title={isPiP ? "Exit Picture in Picture" : "Picture in Picture"}>
+                            {isPiP ? <PictureInPicture2 className="h-5 w-5" /> : <PictureInPicture className="h-5 w-5" />}
+                        </Button>
+
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={onToggleFullscreen}
+                            className="text-white hover:bg-white/20"
+                            title={isFullscreen ? t("controls.exitFullscreen") : t("controls.fullscreen")}
+                        >
                             {isFullscreen ? <Minimize className="h-5 w-5" /> : <Maximize className="h-5 w-5" />}
                         </Button>
                     </div>

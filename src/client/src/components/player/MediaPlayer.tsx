@@ -7,7 +7,6 @@ import { LoadingState } from "./LoadingState"
 import { useEpisodeAutoplay } from "./hooks/useEpisodeAutoplay"
 import { EpisodeAutoplayOverlay } from "./EpisodeAutoplayOverlay"
 import { useSubtitles } from "@/components/player/hooks/useSubtitles.ts"
-
 import { CustomSubtitles } from "@/components/player/CustomSubtitles"
 
 export function MediaPlayer() {
@@ -24,6 +23,17 @@ export function MediaPlayer() {
     const [showControls, setShowControls] = useState(true)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [showAutoplay, setShowAutoplay] = useState(false)
+    const [isPiP, setIsPiP] = useState(false)
+    const [playbackRate, setPlaybackRate] = useState(1)
+    const [qualities, setQualities] = useState<
+        {
+            index: number
+            height: number
+            label: string
+        }[]
+    >([])
+
+    const [currentQuality, setCurrentQuality] = useState(-1)
 
     const controlsTimeoutRef = useRef<number | null>(null)
 
@@ -41,7 +51,6 @@ export function MediaPlayer() {
                 const hls = new Hls({
                     enableWorker: true,
                     lowLatencyMode: false,
-                    ignorePlaylistParsingErrors: true,
                 })
                 hls.loadSource(selectedSource.url)
                 hls.attachMedia(video)
@@ -49,6 +58,13 @@ export function MediaPlayer() {
 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     if (isPlaying) video.play().catch(() => setIsPlaying(false))
+                    const levels = hls.levels.map((level, index) => ({
+                        index,
+                        height: level.height,
+                        label: `${level.height}p`,
+                    }))
+
+                    setQualities(levels)
                     setIsLoading(false)
                 })
 
@@ -72,6 +88,12 @@ export function MediaPlayer() {
         }
     }, [selectedSource, setError, setIsLoading, setIsPlaying])
 
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.playbackRate = playbackRate
+        }
+    }, [playbackRate])
+
     // Sync isPlaying state
     useEffect(() => {
         const video = videoRef.current
@@ -91,6 +113,23 @@ export function MediaPlayer() {
             videoRef.current.muted = isMuted
         }
     }, [volume, isMuted])
+
+    useEffect(() => {
+        const video = videoRef.current
+
+        if (!video) return
+
+        const handleEnterPiP = () => setIsPiP(true)
+        const handleLeavePiP = () => setIsPiP(false)
+
+        video.addEventListener("enterpictureinpicture", handleEnterPiP)
+        video.addEventListener("leavepictureinpicture", handleLeavePiP)
+
+        return () => {
+            video.removeEventListener("enterpictureinpicture", handleEnterPiP)
+            video.removeEventListener("leavepictureinpicture", handleLeavePiP)
+        }
+    }, [])
 
     const handleTimeUpdate = () => {
         if (videoRef.current) {
@@ -127,6 +166,31 @@ export function MediaPlayer() {
         }
     }
 
+    const togglePictureInPicture = async () => {
+        const video = videoRef.current
+
+        if (!video) return
+
+        try {
+            if (document.pictureInPictureElement) {
+                await document.exitPictureInPicture()
+                setIsPiP(false)
+            } else {
+                await video.requestPictureInPicture()
+                setIsPiP(true)
+            }
+        } catch (err) {
+            console.error("PiP failed:", err)
+        }
+    }
+
+    const handleQualityChange = (level: number) => {
+        if (!hlsRef.current) return
+
+        hlsRef.current.currentLevel = level
+        setCurrentQuality(level)
+    }
+
     const toggleMute = () => setIsMuted(!isMuted)
 
     const handleVolumeChange = (val: number[]) => {
@@ -160,8 +224,6 @@ export function MediaPlayer() {
         />
     )
 
-    console.log(media?.backdropUrl.replace("w300", "original"))
-
     return (
         <div ref={containerRef} className="group relative h-screen w-full overflow-hidden" onMouseMove={handleMouseMove} onMouseLeave={() => setShowControls(false)}>
             <video
@@ -179,9 +241,7 @@ export function MediaPlayer() {
                 playsInline
             />
 
-            {selectedSubtitle && (
-                <CustomSubtitles url={selectedSubtitle.url} currentTime={currentTime} />
-            )}
+            {selectedSubtitle && <CustomSubtitles url={selectedSubtitle.url} currentTime={currentTime} />}
 
             {isLoading && !isPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
@@ -218,6 +278,14 @@ export function MediaPlayer() {
                 onVolumeChange={handleVolumeChange}
                 onToggleFullscreen={toggleFullscreen}
                 show={showControls || !isPlaying}
+                ref={containerRef}
+                isPiP={isPiP}
+                onTogglePiP={togglePictureInPicture}
+                playbackRate={playbackRate}
+                onPlaybackRateChange={setPlaybackRate}
+                qualities={qualities}
+                currentQuality={currentQuality}
+                onQualityChange={handleQualityChange}
             />
 
             <EpisodeAutoplayOverlay
@@ -228,7 +296,6 @@ export function MediaPlayer() {
                 }}
                 onCancel={() => setShowAutoplay(false)}
             />
-
         </div>
     )
 }
