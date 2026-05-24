@@ -36,7 +36,7 @@ export function CustomSubtitles({ url, currentTime }: CustomSubtitlesProps) {
     if (!activeCue) return null
 
     const safeHtml = DOMPurify.sanitize(activeCue.text, {
-        ALLOWED_TAGS: ["b", "i", "u", "c","font", "ruby", "rt", "v", "lang"],
+        ALLOWED_TAGS: ["b", "i", "u", "c", "font", "ruby", "rt", "v", "lang"],
         ALLOWED_ATTR: ["style"],
     })
 

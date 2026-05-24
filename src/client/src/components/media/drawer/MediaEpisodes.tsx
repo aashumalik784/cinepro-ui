@@ -123,7 +123,7 @@ export const MediaEpisodes: React.FC<MediaEpisodesProps> = ({ tvId, seasons }) =
                         {orderedEpisodes.map((episode) => (
                             <CarouselItem
                                 key={episode.id}
-                                className="basis-full hover:cursor-pointer pl-4 transition-transform duration-300 ease-in-out hover:scale-[1.02] md:basis-1/3 lg:basis-1/4"
+                                className="basis-full pl-4 transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:cursor-pointer md:basis-1/3 lg:basis-1/4"
                                 onClick={() => handleEpisodeSelect(episode)}
                             >
                                 <div className="space-y-2">

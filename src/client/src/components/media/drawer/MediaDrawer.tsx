@@ -67,7 +67,7 @@ export function MediaDrawer({ payload, isOpen, onClose, className }: MediaDrawer
                         </div>
 
                         {/* CONTENT */}
-                        <div className="relative z-20 -mt-[45vh] px-4 pb-10 md:px-8 text-white">
+                        <div className="relative z-20 -mt-[45vh] px-4 pb-10 text-white md:px-8">
                             {/* LOGO / TITLE */}
                             <div className="mb-4 max-w-[70%] md:max-w-[40%]">
                                 {data.logoUrl ? (

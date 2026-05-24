@@ -20,3 +20,7 @@ This is in early beta. Expect bugs and missing features. If you find any, please
 We are looking for contributors to help us build this project. If you (or your motivation and your agent) are interested, please fork and open a PR.
 
 Thanks!
+
+## Deployment Notice
+
+I just found out that scripts (like 'tsc') can't really get .env variables from the .env file. So to build the project, you need to set the environment variables in your terminal before running the build command.
