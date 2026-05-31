@@ -1,0 +1,184 @@
+{
+  "../../node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2": {
+    "file": "assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+    "src": "../../node_modules/@fontsource-variable/geist/files/geist-cyrillic-ext-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2": {
+    "file": "assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+    "src": "../../node_modules/@fontsource-variable/geist/files/geist-cyrillic-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2": {
+    "file": "assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+    "src": "../../node_modules/@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2": {
+    "file": "assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+    "src": "../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2": {
+    "file": "assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+    "src": "../../node_modules/@fontsource-variable/geist/files/geist-vietnamese-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2": {
+    "file": "assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2",
+    "src": "../../node_modules/@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/manrope/files/manrope-greek-wght-normal.woff2": {
+    "file": "assets/manrope-greek-wght-normal-DL7QRZyv.woff2",
+    "src": "../../node_modules/@fontsource-variable/manrope/files/manrope-greek-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2": {
+    "file": "assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2",
+    "src": "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-ext-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2": {
+    "file": "assets/manrope-latin-wght-normal-DHIcAJRg.woff2",
+    "src": "../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2"
+  },
+  "../../node_modules/@fontsource-variable/manrope/files/manrope-vietnamese-wght-normal.woff2": {
+    "file": "assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2",
+    "src": "../../node_modules/@fontsource-variable/manrope/files/manrope-vietnamese-wght-normal.woff2"
+  },
+  "_MediaWatchPage-Dk8QoQf6.js": {
+    "file": "assets/MediaWatchPage-Dk8QoQf6.js",
+    "name": "MediaWatchPage",
+    "imports": [
+      "index.html",
+      "_strings.utils-DiVwqFSf.js"
+    ]
+  },
+  "_TypedRails-NLrlFppJ.js": {
+    "file": "assets/TypedRails-NLrlFppJ.js",
+    "name": "TypedRails",
+    "imports": [
+      "index.html",
+      "_card-CL2ZuXpA.js"
+    ]
+  },
+  "_card-CL2ZuXpA.js": {
+    "file": "assets/card-CL2ZuXpA.js",
+    "name": "card",
+    "imports": [
+      "index.html"
+    ]
+  },
+  "_strings.utils-DiVwqFSf.js": {
+    "file": "assets/strings.utils-DiVwqFSf.js",
+    "name": "strings.utils"
+  },
+  "index.html": {
+    "file": "assets/index-h-ee5bRM.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/pages/home/Home.tsx",
+      "src/pages/movies/Movies.tsx",
+      "src/pages/watch/movie/WatchMoviePage.tsx",
+      "src/pages/watch/tv/WatchTvPage.tsx",
+      "src/pages/shows/Shows.tsx",
+      "src/pages/404/NotFound.tsx",
+      "src/pages/settings/Settings.tsx",
+      "src/pages/disclaimer/Disclaimer.tsx"
+    ],
+    "css": [
+      "assets/index-C6M-5wgo.css"
+    ],
+    "assets": [
+      "assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+      "assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+      "assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+      "assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+      "assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+      "assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2",
+      "assets/manrope-greek-wght-normal-DL7QRZyv.woff2",
+      "assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2",
+      "assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2",
+      "assets/manrope-latin-wght-normal-DHIcAJRg.woff2"
+    ]
+  },
+  "src/pages/404/NotFound.tsx": {
+    "file": "assets/NotFound-BjorFPMe.js",
+    "name": "NotFound",
+    "src": "src/pages/404/NotFound.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "src/pages/disclaimer/Disclaimer.tsx": {
+    "file": "assets/Disclaimer-B8CtvFof.js",
+    "name": "Disclaimer",
+    "src": "src/pages/disclaimer/Disclaimer.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ]
+  },
+  "src/pages/home/Home.tsx": {
+    "file": "assets/Home-4xtgen6s.js",
+    "name": "Home",
+    "src": "src/pages/home/Home.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_TypedRails-NLrlFppJ.js",
+      "_card-CL2ZuXpA.js"
+    ]
+  },
+  "src/pages/movies/Movies.tsx": {
+    "file": "assets/Movies-CwfVh2cc.js",
+    "name": "Movies",
+    "src": "src/pages/movies/Movies.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_TypedRails-NLrlFppJ.js",
+      "_card-CL2ZuXpA.js"
+    ]
+  },
+  "src/pages/settings/Settings.tsx": {
+    "file": "assets/Settings-BZqOfrZK.js",
+    "name": "Settings",
+    "src": "src/pages/settings/Settings.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_card-CL2ZuXpA.js",
+      "_strings.utils-DiVwqFSf.js"
+    ]
+  },
+  "src/pages/shows/Shows.tsx": {
+    "file": "assets/Shows-cJWRe9kl.js",
+    "name": "Shows",
+    "src": "src/pages/shows/Shows.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_TypedRails-NLrlFppJ.js",
+      "_card-CL2ZuXpA.js"
+    ]
+  },
+  "src/pages/watch/movie/WatchMoviePage.tsx": {
+    "file": "assets/WatchMoviePage-Dvc84awV.js",
+    "name": "WatchMoviePage",
+    "src": "src/pages/watch/movie/WatchMoviePage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_MediaWatchPage-Dk8QoQf6.js",
+      "_strings.utils-DiVwqFSf.js"
+    ]
+  },
+  "src/pages/watch/tv/WatchTvPage.tsx": {
+    "file": "assets/WatchTvPage-BMOzZhF6.js",
+    "name": "WatchTvPage",
+    "src": "src/pages/watch/tv/WatchTvPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_MediaWatchPage-Dk8QoQf6.js",
+      "_strings.utils-DiVwqFSf.js"
+    ]
+  }
+}
