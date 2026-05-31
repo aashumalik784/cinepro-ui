@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "tsx src/server/index.ts --dev",
         "start": "cross-env NODE_ENV=production node build/server/index.js",
-        "build": "npm run build:client && npm run build:server",
+        "build": "vite build",
         "build:client": "dotenv -e .env -- vite build",
         "format": "prettier --write .",
         "build:server": "npx rimraf tsconfig.server.tsbuildinfo && dotenv -e .env -- tsc -p tsconfig.server.json",
