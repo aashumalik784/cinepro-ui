@@ -5,33 +5,22 @@ on:
         branches: [main]
     workflow_dispatch:
 
-permissions:
-    contents: write
-
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
-        environment: production
-
         steps:
-            - name: Checkout code
+            - name: Checkout
               uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: setup-node@v3
-              with:
-                  node-version: "22"
-
-            - name: Install dependencies
-              run: cd src/client && npm install --force
-
-            - name: Build project
-              run: cd src/client && npm run build
+            - name: Install and Build
+              run: |
+                  cd src/client
+                  npm install --force
+                  npm run build
               env:
                   VITE_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
                   VITE_API_URL: ${{ secrets.VITE_API_URL }}
                   VITE_STANDALONE: "true"
-                  VITE_OMSS_API_URL: "http://localhost:3000"
 
             - name: Deploy to Cloudflare Pages
               uses: cloudflare/pages-action@v1
@@ -40,4 +29,3 @@ jobs:
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
                   projectName: 'cinepro-ui'
                   directory: './src/client/dist'
-                  
