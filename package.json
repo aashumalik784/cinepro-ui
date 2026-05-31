@@ -1,4 +1,3 @@
-cat > package.json << 'EOF'
 {
   "name": "cinepro-ui",
   "private": true,
@@ -83,4 +82,3 @@ cat > package.json << 'EOF'
     "vite-plugin-pwa": "^1.3.0"
   }
 }
-EOF
