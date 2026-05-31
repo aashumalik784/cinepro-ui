@@ -6,6 +6,8 @@ import viteFastify from "@fastify/vite/plugin"
 import { VitePWA } from "vite-plugin-pwa"
 
 export default defineConfig({
+    base: "/",
+
     root: resolve(import.meta.dirname, "src", "client"),
 
     plugins: [
@@ -21,7 +23,10 @@ export default defineConfig({
         VitePWA({
             registerType: "autoUpdate",
 
-            outDir: process.env.NODE_ENV !== "production" ? resolve(import.meta.dirname, "src", "client") : resolve(import.meta.dirname, "build", "client", "client"),
+            outDir:
+                process.env.NODE_ENV !== "production"
+                    ? resolve(import.meta.dirname, "src", "client")
+                    : resolve(import.meta.dirname, "build", "client", "client"),
 
             injectRegister: "auto",
 
@@ -32,7 +37,8 @@ export default defineConfig({
 
                 short_name: "CinePro",
 
-                description: "CinePro is a modern, open-source web app for browsing and streaming movies and TV shows directly in your browser without ads and tracking.",
+                description:
+                    "CinePro is a modern, open-source web app for browsing and streaming movies and TV shows directly in your browser without ads and tracking.",
 
                 lang: "en-US",
 
@@ -44,7 +50,12 @@ export default defineConfig({
 
                 display: "standalone",
 
-                display_override: ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
+                display_override: [
+                    "window-controls-overlay",
+                    "standalone",
+                    "minimal-ui",
+                    "browser",
+                ],
 
                 orientation: "any",
 
@@ -197,6 +208,7 @@ export default defineConfig({
                                       },
                                   },
                               },
+
                               {
                                   urlPattern: /^https:\/\/api\.themoviedb\.org\/.*/i,
 
@@ -222,7 +234,10 @@ export default defineConfig({
                     : {},
 
             devOptions: {
-                enabled: process.env.NODE_ENV !== "production" ? true : false,
+                enabled:
+                    process.env.NODE_ENV !== "production"
+                        ? true
+                        : false,
             },
         }),
     ],
@@ -231,11 +246,29 @@ export default defineConfig({
         alias: {
             "@": resolve(import.meta.dirname, "src", "client", "src"),
 
-            "@/app": resolve(import.meta.dirname, "src", "client", "src", "app"),
+            "@/app": resolve(
+                import.meta.dirname,
+                "src",
+                "client",
+                "src",
+                "app"
+            ),
 
-            "@/features": resolve(import.meta.dirname, "src", "client", "src", "features"),
+            "@/features": resolve(
+                import.meta.dirname,
+                "src",
+                "client",
+                "src",
+                "features"
+            ),
 
-            "@/shared": resolve(import.meta.dirname, "src", "client", "src", "shared"),
+            "@/shared": resolve(
+                import.meta.dirname,
+                "src",
+                "client",
+                "src",
+                "shared"
+            ),
         },
     },
 
