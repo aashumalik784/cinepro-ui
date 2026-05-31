@@ -18,7 +18,7 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Set up Node.js
-              uses: actions/setup-node@v3
+              uses: setup-node@v3
               with:
                   node-version: "22"
 
@@ -29,6 +29,7 @@ jobs:
               run: cd src/client && npm run build
               env:
                   VITE_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+                  VITE_API_URL: ${{ secrets.VITE_API_URL }}
                   VITE_STANDALONE: "true"
                   VITE_OMSS_API_URL: "http://localhost:3000"
 
